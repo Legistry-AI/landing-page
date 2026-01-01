@@ -1,15 +1,62 @@
 @import "tailwindcss";
 
+/* Brand colors - Legistry AI Teal */
+@theme {
+  --color-brand-50: #E8F8F8;
+  --color-brand-100: #D1F1F1;
+  --color-brand-200: #A3E3E3;
+  --color-brand-300: #75D5D5;
+  --color-brand-400: #4DC9C9;
+  --color-brand-500: #3EBCBD;
+  --color-brand-600: #35A3A4;
+  --color-brand-700: #2C8A8B;
+  --color-brand-800: #237172;
+  --color-brand-900: #1A5859;
+  --color-brand-950: #0D2C2D;
+
+  /* Override blue with brand teal */
+  --color-blue-50: #E8F8F8;
+  --color-blue-100: #D1F1F1;
+  --color-blue-200: #A3E3E3;
+  --color-blue-300: #75D5D5;
+  --color-blue-400: #4DC9C9;
+  --color-blue-500: #3EBCBD;
+  --color-blue-600: #35A3A4;
+  --color-blue-700: #2C8A8B;
+  --color-blue-800: #237172;
+  --color-blue-900: #1A5859;
+  --color-blue-950: #0D2C2D;
+
+  /* Override indigo with brand teal */
+  --color-indigo-50: #E8F8F8;
+  --color-indigo-100: #D1F1F1;
+  --color-indigo-200: #A3E3E3;
+  --color-indigo-300: #75D5D5;
+  --color-indigo-400: #4DC9C9;
+  --color-indigo-500: #3EBCBD;
+  --color-indigo-600: #35A3A4;
+  --color-indigo-700: #2C8A8B;
+  --color-indigo-800: #237172;
+  --color-indigo-900: #1A5859;
+  --color-indigo-950: #0D2C2D;
+
+  /* Override purple with brand teal */
+  --color-purple-50: #E8F8F8;
+  --color-purple-100: #D1F1F1;
+  --color-purple-200: #A3E3E3;
+  --color-purple-300: #75D5D5;
+  --color-purple-400: #4DC9C9;
+  --color-purple-500: #3EBCBD;
+  --color-purple-600: #35A3A4;
+  --color-purple-700: #2C8A8B;
+  --color-purple-800: #237172;
+  --color-purple-900: #1A5859;
+  --color-purple-950: #0D2C2D;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
