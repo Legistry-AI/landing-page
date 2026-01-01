@@ -16,6 +16,13 @@ export const metadata: Metadata = {
   title: "Legistry AI - AI-Powered Legal Operations Platform",
   description: "Transform your legal operations with specialized AI agents for contracts, compliance, vendor management, analytics, and document intelligence. Draft contracts in 60 seconds.",
   keywords: "legal AI, contract management, compliance automation, legal operations, AI legal assistant",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: "/favicon.png",
+  },
   openGraph: {
     title: "Legistry AI - AI-Powered Legal Operations Platform",
     description: "Transform your legal operations with specialized AI agents for contracts, compliance, vendor management, analytics, and document intelligence.",
