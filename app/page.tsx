@@ -31,7 +31,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8F8F8] to-[#D1F1F1] dark:from-gray-900 dark:to-slate-900">
       {/* Navigation */}
       <nav className="container mx-auto px-6 py-6">
         <div className="flex items-center justify-between">
