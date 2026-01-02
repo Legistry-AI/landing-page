@@ -54,16 +54,16 @@
   --color-purple-950: #0D2C2D;
 }
 
+/* Force light mode - ignore user preference */
 :root {
+  color-scheme: light only;
   --background: #ffffff;
   --foreground: #171717;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Override dark mode - force light colors even if browser is in dark mode */
+html {
+  color-scheme: light !important;
 }
 
 body {
