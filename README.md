@@ -34,4 +34,4 @@ npm run build
 
 ## License
 
-© 2025 Legistry AI
+© 2026Legistry AI
