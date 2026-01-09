@@ -1,375 +1,346 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Check, Zap } from "lucide-react";
+import emailjs from "@emailjs/browser";
+import { Check, Star, Zap, Shield, Clock, Users, BarChart3, FileText, ArrowRight, Mail, X, Rocket, Loader2 } from "lucide-react";
+
+// EmailJS Configuration
+const EMAILJS_SERVICE_ID = "service_c8c3hkl";
+const EMAILJS_TEMPLATE_ID = "template_c07kgo9";
+const EMAILJS_PUBLIC_KEY = "gzRozBCxXCzPONUhQ";
 
 export default function Home() {
-  const faqs = [
+  const [showPopup, setShowPopup] = useState(false);
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    // Initialize EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
+    // Show popup after 1 second
+    const timer = setTimeout(() => {
+      setShowPopup(true);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          user_email: email,
+          to_email: "usman@legistry.ai",
+        }
+      );
+      setSubmitted(true);
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+      console.error("EmailJS Error:", err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const benefits = [
     {
-      question: "How does the free trial work?",
-      answer: "Get full access to all features during your trial. No credit card required. Cancel anytime during the trial period."
+      icon: Clock,
+      title: "Save 80% of Your Time",
+      description: "Draft contracts in 60 seconds instead of hours. Review documents in minutes, not days.",
     },
     {
-      question: "What makes Legistry AI unique?",
-      answer: "Our multi-agent AI architecture combines specialized agents for contracts, compliance, vendors, analytics, and document intelligence - all working together seamlessly."
+      icon: Shield,
+      title: "Enterprise Security",
+      description: "Bank-level 256-bit encryption. GDPR compliant. Your data is always protected.",
     },
     {
-      question: "Can I integrate with my existing tools?",
-      answer: "Yes! We integrate with Slack, Salesforce, HubSpot, SendGrid, and more. Plus webhooks for custom integrations with any system."
+      icon: BarChart3,
+      title: "Reduce Legal Spend",
+      description: "Cut outside counsel costs by up to 60%. Handle more work in-house with AI assistance.",
     },
     {
-      question: "Is my data secure?",
-      answer: "Absolutely. Bank-level encryption, SOC 2 Type II compliance (in progress), HIPAA-ready, and GDPR compliant."
-    },
-    {
-      question: "How long does it take to set up?",
-      answer: "Most teams are up and running in under 30 minutes. Our AI agents are pre-trained and ready to use immediately."
-    },
-    {
-      question: "What kind of support do you offer?",
-      answer: "We offer email support, priority support options, and dedicated success managers for enterprise customers."
+      icon: Users,
+      title: "Built for Teams",
+      description: "Collaborate seamlessly with your legal team. Role-based access and approval workflows.",
     },
   ];
 
+  const features = [
+    "AI-Powered Contract Drafting",
+    "Intelligent Document Review",
+    "Automated Compliance Monitoring",
+    "Vendor Risk Management",
+    "Built-in E-Signatures",
+    "Real-time Analytics",
+  ];
+
+  const stats = [
+    { value: "90%", label: "Time Saved" },
+    { value: "500+", label: "Legal Teams" },
+    { value: "1M+", label: "Contracts Processed" },
+    { value: "99.9%", label: "Uptime" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-[#E8F8F8] to-[#D1F1F1]">
-      {/* Navigation */}
-      <nav className="container mx-auto px-6 py-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
-            <Image src="/logo.png" alt="Legistry AI" width={180} height={60} style={{ width: 'auto', height: 'auto', maxWidth: 180 }} priority />
-          </div>
-          <div className="flex gap-4">
-            <Link
-              href="#contact"
-              className="px-8 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold transition-all shadow-lg hover:shadow-xl"
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Coming Soon Popup */}
+      {showPopup && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="relative bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 md:p-12 animate-in fade-in zoom-in duration-300">
+            <button
+              onClick={() => setShowPopup(false)}
+              className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
             >
-              Get Started Free
+              <X className="w-6 h-6 text-gray-500" />
+            </button>
+
+            <div className="text-center">
+              <div className="mb-6">
+                <Image
+                  src="/logo.png"
+                  alt="Legistry AI"
+                  width={180}
+                  height={60}
+                  className="mx-auto"
+                  style={{ width: 'auto', height: 'auto', maxWidth: 180 }}
+                />
+              </div>
+
+              <h2 className="text-4xl font-bold text-gray-900 mb-3">
+                Coming Soon
+              </h2>
+              <p className="text-xl text-gray-600 mb-8">
+                We're launching our AI-powered legal operations platform. Be the first to know when we go live!
+              </p>
+
+              {submitted ? (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                  <Check className="w-12 h-12 text-green-500 mx-auto mb-3" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">You're on the list!</h3>
+                  <p className="text-gray-600">We'll notify you as soon as we launch.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-5 py-4 text-lg border-2 border-gray-200 rounded-xl focus:border-teal-500 focus:ring-0 outline-none transition-colors"
+                    disabled={isSubmitting}
+                  />
+                  {error && (
+                    <p className="text-red-500 text-sm">{error}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full px-5 py-4 text-lg bg-gradient-to-r from-teal-600 to-blue-600 text-white rounded-xl font-semibold hover:from-teal-700 hover:to-blue-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      "Notify Me"
+                    )}
+                  </button>
+                </form>
+              )}
+
+              <p className="text-sm text-gray-500 mt-6">
+                No spam, ever. Unsubscribe anytime.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
+      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="flex items-center gap-2">
+              <Image src="/logo.png" alt="Legistry AI" width={160} height={50} style={{ width: 'auto', height: 'auto', maxWidth: 160 }} priority />
             </Link>
+            <a
+              href="mailto:hello@legistry.ai"
+              className="px-5 py-2.5 bg-teal-500 text-white rounded-lg hover:bg-teal-600 font-semibold transition-all flex items-center gap-2"
+            >
+              <Mail className="w-4 h-4" />
+              Contact Us
+            </a>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <main className="container mx-auto px-6 py-20">
-        <div className="text-center max-w-5xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
+      <section className="container mx-auto px-6 py-20 md:py-28">
+        <div className="text-center max-w-4xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-teal-100 text-teal-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            AI-Powered Legal Intelligence
+            AI-Powered Legal Operations
           </div>
-
-          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight">
-            Your AI Legal Team<br />
-            <span className="text-blue-600">Automates Legal Work</span>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Transform How Your<br />
+            <span className="text-teal-600">Legal Team Works</span>
           </h1>
-
-          <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto leading-relaxed">
-            Transform your legal operations with specialized AI agents for contracts, compliance, vendor management, analytics, and document intelligence.
+          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Legistry AI automates contract drafting, document review, and compliance monitoring
+            so your team can focus on strategic work that matters.
           </p>
-
-          <p className="text-lg text-gray-500 mb-10">
-            Draft contracts in 60 seconds • Reduce legal spend by 60-80% • Enterprise integrations included
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-            <Link
-              href="#contact"
-              className="px-8 py-4 bg-blue-600 text-white text-lg rounded-lg hover:bg-blue-700 font-semibold shadow-xl hover:shadow-2xl transition-all"
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => setShowPopup(true)}
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-teal-600 text-white rounded-xl hover:bg-teal-700 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
             >
-              Get Started Free →
-            </Link>
-          </div>
-
-          <p className="text-sm text-gray-500">
-            ✓ No credit card required  ✓ Cancel anytime  ✓ Setup in 30 minutes
-          </p>
-        </div>
-
-        {/* Stats */}
-        <div className="grid md:grid-cols-4 gap-8 mt-24 max-w-5xl mx-auto">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">90%</div>
-            <div className="text-gray-600">Cost Savings</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">60s</div>
-            <div className="text-gray-600">Draft Contracts</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">5+</div>
-            <div className="text-gray-600">AI Agents</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-blue-600 mb-2">24/7</div>
-            <div className="text-gray-600">AI Available</div>
+              Request Early Access
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            <a
+              href="mailto:hello@legistry.ai?subject=Learn More"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 border-2 border-teal-600 text-teal-600 rounded-xl hover:bg-teal-50 text-lg font-semibold transition-all"
+            >
+              Learn More
+            </a>
           </div>
         </div>
+      </section>
 
-        {/* Features Grid */}
-        <div className="mt-32 max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Complete Legal Operations Suite
-            </h2>
-            <p className="text-xl text-gray-600">
-              Specialized AI agents handle your entire legal workflow
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-              <div className="text-5xl mb-4">📄</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">
-                Contract Agent
-              </h3>
-              <p className="text-gray-600 mb-4">
-                AI-powered contract lifecycle management from draft to signature.
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Draft contracts in 60 seconds with AI</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>AI review with risk scoring (1-10 scale)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Smart negotiation recommendations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Built-in e-signature capabilities</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-              <div className="text-5xl mb-4">✅</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">
-                Compliance Agent
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Real-time regulatory monitoring and automated policy management.
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Monitor GDPR, CCPA, SOX, HIPAA updates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Auto-generate compliance policies</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Deadline tracking and alerts</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Slack notifications for critical alerts</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-              <div className="text-5xl mb-4">🤝</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">
-                Vendor Agent
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Streamline vendor onboarding and automate risk assessments.
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Onboard vendors in 2 hours (vs 5 days)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>AI risk assessment (financial, security, compliance)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Contract renewal tracking</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Salesforce & HubSpot sync</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow">
-              <div className="text-5xl mb-4">📊</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">
-                Analytics Agent
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Predictive analytics and cost forecasting for legal operations.
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Legal spend analysis and trends</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>6-12 month cost forecasting (85-90% accuracy)</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Cost-saving opportunity identification</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Executive dashboards and reports</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-shadow md:col-span-2 lg:col-span-1">
-              <div className="text-5xl mb-4">🤖</div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">
-                AI Document Assistant
-              </h3>
-              <p className="text-gray-600 mb-4">
-                Chat with your legal documents and get instant AI-powered answers.
-              </p>
-              <ul className="space-y-2 text-gray-700">
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Upload PDF, DOCX, TXT documents</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>AI-powered Q&A with citations</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>Conversation history tracking</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                  <span>HIPAA-compliant document storage</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Integrations */}
-        <div className="mt-32 max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Seamless Enterprise Integrations
-            </h2>
-            <p className="text-xl text-gray-600">
-              Connect with the tools your team already uses
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-gradient-to-br from-purple-50 to-indigo-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="text-4xl mb-4">💬</div>
-              <h3 className="font-bold text-lg text-gray-900 mb-2">Slack</h3>
-              <p className="text-sm text-gray-600">Real-time alerts and notifications for compliance deadlines and contract updates</p>
-            </div>
-            <div className="bg-gradient-to-br from-blue-50 to-cyan-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="text-4xl mb-4">☁️</div>
-              <h3 className="font-bold text-lg text-gray-900 mb-2">Salesforce</h3>
-              <p className="text-sm text-gray-600">Sync vendor data and contract information with your CRM automatically</p>
-            </div>
-            <div className="bg-gradient-to-br from-orange-50 to-amber-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="text-4xl mb-4">🎯</div>
-              <h3 className="font-bold text-lg text-gray-900 mb-2">HubSpot</h3>
-              <p className="text-sm text-gray-600">Keep your marketing and sales teams in sync with legal workflows</p>
-            </div>
-            <div className="bg-gradient-to-br from-green-50 to-emerald-100 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1">
-              <div className="text-4xl mb-4">📧</div>
-              <h3 className="font-bold text-lg text-gray-900 mb-2">SendGrid</h3>
-              <p className="text-sm text-gray-600">Automated email notifications for contract renewals and compliance alerts</p>
-            </div>
-          </div>
-          <div className="mt-8 text-center">
-            <p className="text-gray-500">
-              Plus <span className="font-semibold text-blue-600">Webhooks</span> for custom integrations with any system
-            </p>
-          </div>
-        </div>
-
-        {/* FAQ */}
-        <div className="mt-32 max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-gray-900 mb-12 text-center">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-6">
-            {faqs.map((faq, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  {faq.question}
-                </h3>
-                <p className="text-gray-600">
-                  {faq.answer}
-                </p>
+      {/* Stats */}
+      <section className="bg-gray-900 py-12">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
+            {stats.map((stat) => (
+              <div key={stat.label}>
+                <div className="text-4xl font-bold text-teal-400 mb-2">{stat.value}</div>
+                <div className="text-gray-300">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
+      </section>
 
-        {/* CTA Section */}
-        <div className="mt-32 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-12 text-center text-white" id="contact">
-          <h2 className="text-4xl font-bold mb-4">
-            Ready to Transform Your Legal Operations?
-          </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Empower your legal team with AI-powered automation and intelligence
-          </p>
-          <a
-            href="mailto:usman@legistry.ai"
-            className="inline-block px-8 py-4 bg-white text-blue-600 text-lg rounded-lg hover:bg-gray-100 font-semibold shadow-xl transition-all"
-          >
-            Contact Us →
-          </a>
-          <p className="mt-4 text-sm opacity-75">
-            No credit card required • Setup in 30 minutes • Cancel anytime
-          </p>
+      {/* Benefits */}
+      <section className="container mx-auto px-6 py-20">
+        <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
+          Why Legal Teams Choose Us
+        </h2>
+        <p className="text-xl text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+          Everything you need to modernize your legal operations in one platform.
+        </p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {benefits.map((benefit) => (
+            <div key={benefit.title} className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="w-14 h-14 bg-teal-100 rounded-xl flex items-center justify-center mb-6">
+                <benefit.icon className="w-7 h-7 text-teal-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">{benefit.title}</h3>
+              <p className="text-gray-600">{benefit.description}</p>
+            </div>
+          ))}
         </div>
-      </main>
+      </section>
+
+      {/* Features List */}
+      <section className="container mx-auto px-6 py-20 bg-white/50">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-4xl font-bold text-center text-gray-900 mb-12">
+            Comprehensive Legal Platform
+          </h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            {features.map((feature) => (
+              <div key={feature} className="flex items-center gap-3 bg-white rounded-lg p-4 shadow">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Check className="w-5 h-5 text-green-600" />
+                </div>
+                <span className="font-medium text-gray-900">{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Security Section */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="bg-gray-900 rounded-3xl p-12 text-center text-white max-w-4xl mx-auto">
+          <Shield className="w-16 h-16 text-teal-400 mx-auto mb-6" />
+          <h2 className="text-3xl font-bold mb-4">Enterprise-Grade Security</h2>
+          <p className="text-xl text-gray-300 mb-8">
+            Your legal data is sensitive. We protect it with bank-level 256-bit encryption,
+            strict access controls, and comprehensive audit trails.
+          </p>
+          <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>256-bit Encryption</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>GDPR Compliant</span>
+            </div>
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-lg">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>99.9% Uptime</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="container mx-auto px-6 py-20">
+        <div className="bg-gradient-to-r from-teal-600 to-blue-600 rounded-3xl p-12 text-center text-white">
+          <h2 className="text-4xl font-bold mb-4">Ready to Transform Your Legal Operations?</h2>
+          <p className="text-xl mb-8 opacity-90">
+            Join leading legal teams already using Legistry AI. Request early access today.
+          </p>
+          <button
+            onClick={() => setShowPopup(true)}
+            className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-teal-600 rounded-xl hover:bg-gray-100 text-lg font-semibold shadow-xl transition-all"
+          >
+            Request Early Access
+            <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+      </section>
 
       {/* Footer */}
-      <footer className="container mx-auto px-6 py-12 mt-20 border-t border-gray-200">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          <div>
-            <h4 className="font-bold text-gray-900 mb-4">Product</h4>
-            <ul className="space-y-2 text-gray-600">
-              <li><a href="#" className="hover:text-blue-600">Features</a></li>
-              <li><a href="#" className="hover:text-blue-600">Integrations</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-gray-900 mb-4">Company</h4>
-            <ul className="space-y-2 text-gray-600">
-              <li><a href="#" className="hover:text-blue-600">About</a></li>
-              <li><a href="mailto:usman@legistry.ai" className="hover:text-blue-600">Contact</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-gray-900 mb-4">Legal</h4>
-            <ul className="space-y-2 text-gray-600">
-              <li><a href="#" className="hover:text-blue-600">Privacy</a></li>
-              <li><a href="#" className="hover:text-blue-600">Terms</a></li>
-              <li><a href="#" className="hover:text-blue-600">Security</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-gray-900 mb-4">Legistry AI</h4>
-            <p className="text-gray-600 text-sm">
-              AI-powered legal operations platform for modern legal teams.
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/logo.png"
+                alt="Legistry AI"
+                width={120}
+                height={40}
+                style={{
+                  width: 'auto',
+                  height: 'auto',
+                  maxWidth: 120,
+                  filter: 'invert(56%) sepia(75%) saturate(406%) hue-rotate(139deg) brightness(91%) contrast(89%)'
+                }}
+              />
+            </div>
+            <p className="text-gray-400 text-sm">
+              © 2025 Legistry AI. All rights reserved.
             </p>
+            <a href="mailto:hello@legistry.ai" className="text-teal-400 hover:text-teal-300">
+              hello@legistry.ai
+            </a>
           </div>
-        </div>
-        <div className="text-center text-gray-600 pt-8 border-t border-gray-200">
-          <p>© 2025 Legistry AI. Transform your legal team with AI agents.</p>
         </div>
       </footer>
     </div>
